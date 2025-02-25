@@ -1,5 +1,4 @@
-# codi_go
-
+# CodiGo
 Aplicación para Laboratorio de Ingeniería de Dispositivos Móviles.
 
 ## Getting Started

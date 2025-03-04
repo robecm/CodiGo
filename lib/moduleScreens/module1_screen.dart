@@ -4,6 +4,7 @@ import '../animations/bubble_path_widget.dart';
 import '../animations/animated_button_hover.dart' show AnimatedButtonHover;
 import '../animations/floating_bubble.dart' hide AnimatedButtonHover;
 import '../animations/decorated_bubble.dart';
+import '../exerciseScreens/multiple_option_question_screen.dart';
 
 class Module1Screen extends StatefulWidget {
   const Module1Screen({super.key});
@@ -54,7 +55,6 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
     final Random random = Random();
     final List<BubbleData> bubbles = [];
 
-    // Generate 20-30 random bubbles
     final int count = random.nextInt(levelCount) + levelCount*5;
 
     for (int i = 0; i < count; i++) {
@@ -100,6 +100,25 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
     setState(() {
       _backgroundColor = baseHSL.withLightness(newLightness).toColor();
     });
+  }
+
+  void _navigateToQuestion(int buttonNumber) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MultipleOptionQuestionScreen(
+          questionNumber: buttonNumber,
+          question: "Esta es la pregunta número $buttonNumber. Selecciona la alternativa correcta.",
+          options: [
+            "Esta es la respuesta correcta",
+            "Esta es una respuesta incorrecta",
+            "Esta es otra respuesta incorrecta",
+            "Esta es otra respuesta incorrecta más"
+          ],
+          correctOptionIndex: 0, // First option is always correct
+        ),
+      ),
+    );
   }
 
   @override
@@ -202,9 +221,7 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
                           ],
                         ),
                         child: FloatingActionButton(
-                          onPressed: () {
-                            debugPrint('Button $i pressed');
-                          },
+                          onPressed: () => _navigateToQuestion(i), // Updated to navigate
                           heroTag: "btn$i",
                           shape: const CircleBorder(),
                           backgroundColor: i == 1 ? buttonColor : null,

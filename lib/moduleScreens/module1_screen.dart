@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import '../Animations/animated_button_hover.dart';
-import '../Animations/bubble_path_widget.dart';
+import 'dart:math';
+import '../animations/bubble_path_widget.dart';
+import '../animations/animated_button_hover.dart' show AnimatedButtonHover;
+import '../animations/floating_bubble.dart' hide AnimatedButtonHover;
+import '../animations/decorated_bubble.dart';
 
 class Module1Screen extends StatefulWidget {
   const Module1Screen({super.key});
@@ -13,6 +16,9 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
   late ScrollController _scrollController;
   Color _backgroundColor = Colors.blue; // Default color
   late AnimationController _animationController;
+  late int levelCount = 30;
+  // Change from late to nullable
+  List<BubbleData>? _backgroundBubbles;
 
   @override
   void initState() {
@@ -25,12 +31,46 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
       duration: const Duration(seconds: 3),
     )..repeat();
 
+    // Initialize bubbles early with a default size
+    _backgroundBubbles = _generateRandomBubbles(
+      800, // Default width until we get actual measurements
+      150.0 * levelCount,
+    );
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final baseColor = Theme.of(context).colorScheme.primary;
       setState(() {
         _backgroundColor = baseColor;
+        // Re-generate with actual screen width
+        _backgroundBubbles = _generateRandomBubbles(
+          MediaQuery.of(context).size.width,
+          150.0 * levelCount,
+        );
       });
     });
+  }
+
+  List<BubbleData> _generateRandomBubbles(double screenWidth, double screenHeight) {
+    final Random random = Random();
+    final List<BubbleData> bubbles = [];
+
+    // Generate 20-30 random bubbles
+    final int count = random.nextInt(levelCount) + levelCount*5;
+
+    for (int i = 0; i < count; i++) {
+      bubbles.add(
+        BubbleData(
+          x: random.nextDouble() * screenWidth,
+          y: random.nextDouble() * screenHeight * 2, // Spread throughout the content
+          size: random.nextDouble() * 30 + 10, // 10-40px size
+          opacity: random.nextDouble() * 0.3 + 0.1, // 0.1-0.4 opacity
+          delay: random.nextDouble() * 5, // Random animation phase
+          scrollFactor: random.nextDouble() * 0.4 + 0.8, // 0.8-1.2 scroll factor
+        ),
+      );
+    }
+
+    return bubbles;
   }
 
   @override
@@ -66,7 +106,6 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
   Widget build(BuildContext context) {
     Color bubbleColor = Theme.of(context).colorScheme.inversePrimary;
     Color buttonColor = const Color(0xffd8e2ff);
-    final double levelCount = 20;
     double progressValue = 0.9;
     final double screenWidth = MediaQuery.of(context).size.width;
 
@@ -92,8 +131,8 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Módulo 1 - Bits', style: TextStyle(fontFamily: 'GoodMatcha'),),
+        backgroundColor: Color(0xff19253b),
+        title: const Text('Módulo 1 - Bits', style: TextStyle(fontFamily: 'GoodMatcha', color: Colors.white),),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(5.0),
           child: Stack(
@@ -103,7 +142,7 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
                 height: 15.0,
                 child: LinearProgressIndicator(
                   value: progressValue,
-                  backgroundColor: Colors.white60,
+                  backgroundColor: Colors.white70,
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green.shade700),
                 ),
               ),
@@ -130,6 +169,16 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
           child: Stack(
             alignment: Alignment.topCenter,
             children: [
+              // Background bubbles
+              if (_backgroundBubbles != null)
+                Positioned.fill(
+                  child: FloatingBubbleGroup(
+                    bubbles: _backgroundBubbles!,
+                    baseColor: Theme.of(context).colorScheme.primary,
+                    scrollOffset: _scrollController.hasClients ? _scrollController.offset : 0.0,
+                  ),
+                ),
+
               for (int i = 1; i <= levelCount; i++) ...[
                 Positioned(
                   top: 150.0 * (i - 1),
@@ -200,21 +249,25 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
                 Navigator.pop(context);
               },
               iconSize: 20,
+              color: Color(0xff19253b),
             ),
             IconButton(
               icon: const Icon(Icons.book),
               onPressed: () {},
               iconSize: 20,
+              color: Color(0xff19253b)
             ),
             IconButton(
               icon: const Icon(Icons.notifications),
               onPressed: () {},
               iconSize: 20,
+              color: Color(0xff19253b)
             ),
             IconButton(
               icon: const Icon(Icons.account_circle),
               onPressed: () {},
               iconSize: 20,
+              color: Color(0xff19253b)
             ),
           ],
         ),

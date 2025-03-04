@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show Ticker;
 import 'decorated_bubble.dart';
 
+
 /// Widget that animates a floating bubble
 class FloatingBubble extends StatefulWidget {
   final double size;

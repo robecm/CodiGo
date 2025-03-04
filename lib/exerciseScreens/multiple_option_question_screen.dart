@@ -30,6 +30,10 @@ class _MultipleOptionQuestionScreenState extends State<MultipleOptionQuestionScr
   late AnimationController _animationController;
   bool _showResultPopup = false;
 
+  // Add variables for randomized options
+  late List<String> _randomizedOptions;
+  late int _randomizedCorrectIndex;
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +43,9 @@ class _MultipleOptionQuestionScreenState extends State<MultipleOptionQuestionScr
       vsync: this,
       duration: const Duration(seconds: 3),
     )..repeat();
+
+    // Randomize the options
+    _randomizeOptions();
 
     // Initialize bubbles early with a default size
     _backgroundBubbles = _generateRandomBubbles(
@@ -57,6 +64,20 @@ class _MultipleOptionQuestionScreenState extends State<MultipleOptionQuestionScr
         );
       });
     });
+  }
+
+  void _randomizeOptions() {
+    // Create a copy of the original options
+    _randomizedOptions = List<String>.from(widget.options);
+
+    // Store the correct answer before shuffling
+    final correctAnswer = widget.options[widget.correctOptionIndex];
+
+    // Shuffle the options
+    _randomizedOptions.shuffle();
+
+    // Find the new index of the correct answer
+    _randomizedCorrectIndex = _randomizedOptions.indexOf(correctAnswer);
   }
 
   List<BubbleData> _generateRandomBubbles(double screenWidth, double screenHeight) {
@@ -101,9 +122,9 @@ class _MultipleOptionQuestionScreenState extends State<MultipleOptionQuestionScr
   Color _getOptionColor(int optionIndex) {
     if (!_answerSubmitted) {
       return Colors.white;
-    } else if (optionIndex == widget.correctOptionIndex) {
+    } else if (optionIndex == _randomizedCorrectIndex) {
       return Colors.green.shade100; // Correct answer is always green
-    } else if (optionIndex == _selectedOptionIndex && optionIndex != widget.correctOptionIndex) {
+    } else if (optionIndex == _selectedOptionIndex && optionIndex != _randomizedCorrectIndex) {
       return Colors.red.shade100; // Selected wrong answer is red
     } else {
       return Colors.white;
@@ -113,9 +134,9 @@ class _MultipleOptionQuestionScreenState extends State<MultipleOptionQuestionScr
   Color _getCheckColor(int optionIndex) {
     if (!_answerSubmitted) {
       return Theme.of(context).colorScheme.inversePrimary;
-    } else if (optionIndex == widget.correctOptionIndex) {
+    } else if (optionIndex == _randomizedCorrectIndex) {
       return Colors.green;
-    } else if (optionIndex == _selectedOptionIndex && optionIndex != widget.correctOptionIndex) {
+    } else if (optionIndex == _selectedOptionIndex && optionIndex != _randomizedCorrectIndex) {
       return Colors.red;
     } else {
       return Colors.grey.shade400;
@@ -123,7 +144,7 @@ class _MultipleOptionQuestionScreenState extends State<MultipleOptionQuestionScr
   }
 
   Widget _buildResultPopup() {
-    bool isCorrect = _selectedOptionIndex == widget.correctOptionIndex;
+    bool isCorrect = _selectedOptionIndex == _randomizedCorrectIndex;
 
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: 0.0, end: _showResultPopup ? 1.0 : 0.0),
@@ -281,12 +302,12 @@ class _MultipleOptionQuestionScreenState extends State<MultipleOptionQuestionScr
                           ),
                         ),
 
-                        // Options
-                        ...List.generate(widget.options.length, (index) {
+                        // Options - using randomized options
+                        ...List.generate(_randomizedOptions.length, (index) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: _buildOptionButton(
-                              widget.options[index],
+                              _randomizedOptions[index],
                               index,
                               _selectedOptionIndex == index,
                             ),
@@ -311,7 +332,7 @@ class _MultipleOptionQuestionScreenState extends State<MultipleOptionQuestionScr
   }
 
   Widget _buildOptionButton(String option, int index, bool isSelected) {
-    final bool isCorrectOption = index == widget.correctOptionIndex;
+    final bool isCorrectOption = index == _randomizedCorrectIndex;
     final bool showCorrectAnswer = _answerSubmitted && isCorrectOption;
     final bool showWrongAnswer = _answerSubmitted && isSelected && !isCorrectOption;
 

@@ -5,6 +5,8 @@ import '../animations/animated_button_hover.dart' show AnimatedButtonHover;
 import '../animations/floating_bubble.dart' hide AnimatedButtonHover;
 import '../animations/decorated_bubble.dart';
 import '../exerciseScreens/multiple_option_question_screen.dart';
+import '../learningScreens/learning_topics_screen.dart';
+import '../data/module1_learning_content.dart';
 
 class Module1Screen extends StatefulWidget {
   const Module1Screen({super.key});
@@ -21,6 +23,7 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
   List<BubbleData>? _backgroundBubbles;
   final Map<int, Widget> _cachedLevelButtons = {};
   final Map<int, Widget> _cachedBubblePaths = {};
+  bool _learningCompleted = false;
 
   @override
   void initState() {
@@ -93,6 +96,11 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
   }
 
   void _navigateToQuestion(int buttonNumber) {
+    if (!_learningCompleted) {
+      _navigateToLearningSection();
+      return;
+    }
+
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -100,12 +108,33 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
           questionNumber: buttonNumber,
           question: "Esta es la pregunta número $buttonNumber. Selecciona la alternativa correcta.",
           options: [
-            "Esta es la respuesta correcta",
-            "Esta es una respuesta incorrecta",
-            "Esta es otra respuesta incorrecta",
-            "Esta es otra respuesta incorrecta más"
+            "Opción A",
+            "Opción B",
+            "Opción C",
+            "Opción D",
           ],
           correctOptionIndex: 0,
+        ),
+      ),
+    );
+  }
+
+  void _navigateToLearningSection({bool isReview = false}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LearningTopicsScreen(
+          topics: Module1LearningContent.getTopics(),
+          backgroundColor: _backgroundColorNotifier.value,
+          isReview: isReview,
+          onCompleted: () {
+            if (!isReview) {
+              setState(() {
+                _learningCompleted = true;
+              });
+            }
+            Navigator.pop(context);
+          },
         ),
       ),
     );
@@ -231,7 +260,7 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
             automaticallyImplyLeading: false,
             centerTitle: true,
             backgroundColor: const Color(0xff19253b),
-            title: const Text('Módulo 1 - Bits', style: TextStyle(fontFamily: 'GoodMatcha', color: Colors.white)),
+            title: const Text('Módulo 1 - Algoritmos', style: TextStyle(fontFamily: 'GoodMatcha', color: Colors.white)),
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(5.0),
               child: Stack(
@@ -263,22 +292,64 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
           body: _backgroundBubbles == null
               ? const Center(child: CircularProgressIndicator())
               : Stack(
-                  children: [
-                    // Background bubbles in a RepaintBoundary
-                    Positioned.fill(
-                      child: RepaintBoundary(
-                        child: FloatingBubbleGroup(
-                          bubbles: _backgroundBubbles!,
-                          baseColor: Theme.of(context).colorScheme.primary,
-                          scrollOffset: _scrollController.hasClients ? _scrollController.offset : 0.0,
-                        ),
+            children: [
+              // Background bubbles in a RepaintBoundary
+              Positioned.fill(
+                child: RepaintBoundary(
+                  child: FloatingBubbleGroup(
+                    bubbles: _backgroundBubbles!,
+                    baseColor: Theme.of(context).colorScheme.primary,
+                    scrollOffset: _scrollController.hasClients ? _scrollController.offset : 0.0,
+                  ),
+                ),
+              ),
+
+              // Scrollable content in another layer
+              _buildLevelContent(getPositionForIndex, bubbleColor),
+
+              // Learning banner if not completed
+              if (!_learningCompleted)
+                Positioned(
+                  top: 16,
+                  left: 16,
+                  right: 16,
+                  child: GestureDetector(
+                    onTap: _navigateToLearningSection,
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withAlpha(40),
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.info_outline, color: Color(0xff19253b)),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'Aprende los conceptos básicos antes de responder preguntas',
+                              style: TextStyle(
+                                color: const Color(0xff19253b),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-
-                    // Scrollable content in another layer
-                    _buildLevelContent(getPositionForIndex, bubbleColor),
-                  ],
+                  ),
                 ),
+
+
+            ],
+          ),
           bottomNavigationBar: BottomAppBar(
             height: 60,
             color: Colors.white,
@@ -287,30 +358,50 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 IconButton(
-                  icon: const Icon(Icons.home),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  iconSize: 24,
-                  color: Colors.grey.shade600
+                    icon: const Icon(Icons.home),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    iconSize: 24,
+                    color: Colors.grey.shade600
                 ),
+                // Removed one of the duplicate book icons
                 IconButton(
                   icon: const Icon(Icons.book),
-                  onPressed: () {},
+                  onPressed: () {
+                    if (_learningCompleted) {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return SafeArea(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                ListTile(
+                                  leading: const Icon(Icons.school),
+                                  title: const Text('Repasar conceptos'),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    _navigateToLearningSection(isReview: true);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      _navigateToLearningSection();
+                    }
+                  },
                   iconSize: 24,
-                  color: Colors.grey.shade600
+                  color: _learningCompleted ? Colors.grey.shade600 : const Color(0xff19253b),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.notifications),
-                  onPressed: () {},
-                  iconSize: 24,
-                  color: Colors.grey.shade600
-                ),
-                IconButton(
-                  icon: const Icon(Icons.account_circle),
-                  onPressed: () {},
-                  iconSize: 24,
-                  color: Colors.grey.shade600
+                    icon: const Icon(Icons.account_circle),
+                    onPressed: () {},
+                    iconSize: 24,
+                    color: Colors.grey.shade600
                 ),
               ],
             ),
@@ -321,33 +412,32 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
   }
 
   Widget _buildLevelContent(Function getPositionForIndex, Color bubbleColor) {
+    // Calculate dynamic top padding based on whether learning banner is shown
+    final double topPadding = _learningCompleted ? 50.0 : 120.0;
+
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification notification) {
-        // Only handle scroll end to avoid excessive updates
-        if (notification is ScrollEndNotification) {
-          _updateBackgroundColor();
-        }
         return false;
       },
       child: SingleChildScrollView(
         controller: _scrollController,
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.only(top: 50),
-          // Use a more efficient way to build the level buttons
+          padding: EdgeInsets.only(top: topPadding), // Dynamic padding when banner is showing
           child: Stack(
             alignment: Alignment.topCenter,
             children: [
-              // Use lazily loaded widgets - only show what's visible
+              // Level buttons
               for (int i = 1; i <= levelCount; i++)
                 _buildLevelButton(i, getPositionForIndex(i)),
 
+              // Bubble paths between buttons
               for (int i = 1; i < levelCount; i++)
                 _buildDirectionalBubbles(
-                  i,
-                  bubbleColor,
-                  getPositionForIndex(i),
-                  getPositionForIndex(i + 1),
+                    i,
+                    bubbleColor,
+                    getPositionForIndex(i),
+                    getPositionForIndex(i + 1)
                 ),
 
               // Add padding at the bottom

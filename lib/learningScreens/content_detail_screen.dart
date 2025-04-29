@@ -161,14 +161,7 @@ class _ContentDetailScreenState extends State<ContentDetailScreen> {
             const Divider(height: 32),
 
             // Main content
-            Text(
-              concept.content,
-              style: const TextStyle(
-                fontSize: 16,
-                height: 1.5,
-              ),
-            ),
-
+            concept.content,
             // Display images if available
             if (concept.imageAssets.isNotEmpty) ...[
               const SizedBox(height: 24),

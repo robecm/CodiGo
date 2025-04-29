@@ -11,165 +11,672 @@ class Module1LearningContent {
         color: Colors.blue,
         icon: Icons.auto_awesome,
         concepts: [
+          // Concept 1: Definición y Características
           LearningConcept(
             id: 'definition',
             title: 'Definición y Características',
             shortDescription: 'Qué son y cómo funcionan',
-            content: """# <span style="font-size: 32px; color: #FF5722">🌟 ¿Qué es un Algoritmo? 🌟</span>
-
-Un algoritmo es una <span style="font-weight: 900; color: #1565C0">**secuencia lógica de pasos**</span> para resolver problemas, similar a seguir una <span style="font-style: italic; font-size: 18px">receta mágica</span>.
-
-## <span style="font-size: 24px; color: #9C27B0">✨ Características Clave:</span>
-
-- 📋 <span style="font-weight: 800; letter-spacing: 1px">**Orden:**</span> <span style="font-size: 17px">Cada paso se ejecuta en secuencia.</span>
-- 🔀 <span style="font-weight: 800; letter-spacing: 1px">**Decisión:**</span> <span style="font-style: italic; font-size: 17px">Permite escoger entre diferentes caminos.</span>
-- 🔄 <span style="font-weight: 800; letter-spacing: 1px">**Repetición:**</span> <span style="text-decoration: underline; font-size: 17px">Ejecuta bloques de instrucciones múltiples veces.</span>
-
-![Receta visual](assets/images/recipe.png)
-            """,
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '🌟 ¿Qué es un Algoritmo? 🌟',
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    color: Color(0xFFFF5722),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  'Un algoritmo es una secuencia lógica de pasos para resolver problemas, similar a seguir una receta mágica.',
+                  style: TextStyle(fontSize: 18.0, color: Colors.black87),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  '✨ Características Clave:',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    color: Color(0xFF9C27B0),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  '📋 Orden: Cada paso se ejecuta en secuencia.',
+                  style: TextStyle(
+                    fontSize: 17.0,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+                Text(
+                  '🔀 Decisión: Permite escoger entre diferentes caminos.',
+                  style: TextStyle(
+                    fontSize: 17.0,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+                Text(
+                  '🔄 Repetición: Ejecuta bloques de instrucciones múltiples veces.',
+                  style: TextStyle(
+                    fontSize: 17.0,
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                // Uncomment if you want to display the image:
+                // Image.asset('assets/images/recipe.png'),
+              ],
+            ),
             imageAssets: [],
           ),
+          // Concept 2: Ejemplos de la Vida Diaria
           LearningConcept(
             id: 'real_life_examples',
             title: 'Ejemplos de la Vida Diaria',
             shortDescription: 'Los algoritmos están a nuestro alrededor',
-            content: """# <span style="font-size: 32px; color: #4CAF50">🚀 Ejemplos Prácticos 🚀</span>
-
-## <span style="font-size: 26px; background-color: #FFEB3B; padding: 5px">🥪 **Super Sándwich:**</span>
-1. <span style="font-size: 18px; font-weight: 700; color: #E65100">Toma dos rebanadas de pan.</span>
-2. <span style="font-size: 18px; font-weight: 700; color: #FFA000">Unta mantequilla.</span>
-3. <span style="font-size: 18px; font-weight: 700; color: #FF6F00">Agrega ingredientes (jamón, queso, etc.).</span>
-4. <span style="font-size: 18px; font-weight: 700; color: #F57F17">Junta las rebanadas.</span>
-
-## <span style="font-size: 26px; background-color: #B3E5FC; padding: 5px">🏃‍♂️ **Jugar a las Escondidas:**</span>
-1. <span style="font-size: 18px; font-style: italic; color: #0277BD">Una persona cuenta.</span>
-2. <span style="font-size: 18px; font-style: italic; color: #01579B">Los demás se esconden.</span>
-3. <span style="font-size: 18px; font-style: italic; color: #003366">Se busca al que cuenta.</span>
-
-![Ejemplo de juego](assets/images/hide_and_seek.png)
-            """,
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '🚀 Ejemplos Prácticos 🚀',
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    color: Color(0xFF4CAF50),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  '🥪 Super Sándwich:',
+                  style: TextStyle(
+                    fontSize: 26.0,
+                    backgroundColor: Color(0xFFFFEB3B),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 5.0),
+                Text(
+                  '1. Toma dos rebanadas de pan.',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFFE65100),
+                  ),
+                ),
+                Text(
+                  '2. Unta mantequilla.',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFFFFA000),
+                  ),
+                ),
+                Text(
+                  '3. Agrega ingredientes (jamón, queso, etc.).',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFFFF6F00),
+                  ),
+                ),
+                Text(
+                  '4. Junta las rebanadas.',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFFF57F17),
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  '🏃‍♂️ Jugar a las Escondidas:',
+                  style: TextStyle(
+                    fontSize: 26.0,
+                    backgroundColor: Color(0xFFB3E5FC),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 5.0),
+                Text(
+                  '1. Una persona cuenta.',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontStyle: FontStyle.italic,
+                    color: Color(0xFF0277BD),
+                  ),
+                ),
+                Text(
+                  '2. Los demás se esconden.',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontStyle: FontStyle.italic,
+                    color: Color(0xFF01579B),
+                  ),
+                ),
+                Text(
+                  '3. Se busca al que cuenta.',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontStyle: FontStyle.italic,
+                    color: Color(0xFF003366),
+                  ),
+                ),
+                // Uncomment if you want to display the image:
+                // Image.asset('assets/images/hide_and_seek.png'),
+              ],
+            ),
             imageAssets: [],
           ),
+          // Concept 3: Estructuras de Control
           LearningConcept(
             id: 'control_structures',
             title: 'Estructuras de Control',
             shortDescription: 'Cómo controlar el flujo de un algoritmo',
-            content: """# <span style="font-size: 30px; color: #7B1FA2; text-shadow: 2px 2px 4px rgba(0,0,0,0.2)">🧠 Decisiones y Bucles 🔄</span>
-
-## <span style="font-size: 25px; color: #D81B60; border-bottom: 3px dashed #D81B60">🔍 **Decisiones:**</span>
-<span style="font-size: 18px">Utiliza condiciones para elegir el camino correcto.</span>
-<span style="font-style: italic; font-size: 17px; color: #AD1457">*Ejemplo:*</span> <span style="font-weight: bold; font-size: 17px">Si tienes hambre,</span> prepara un sándwich; <span style="font-weight: bold; font-size: 17px">si no,</span> continúa con otra tarea.
-
-## <span style="font-size: 25px; color: #00838F; border-bottom: 3px dashed #00838F">⭕ **Bucles:**</span>
-<span style="font-size: 18px">Repite instrucciones hasta cumplir un objetivo.</span>
-<span style="font-style: italic; font-size: 17px; color: #006064">*Ejemplo:*</span> <span style="font-weight: bold; letter-spacing: 1px">Repetir 5 veces:</span> dar un paso y aplaudir.
-
-![Diagrama simple](assets/images/flowchart_simple.png)
-            """,
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '🧠 Decisiones y Bucles 🔄',
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    color: Color(0xFF7B1FA2),
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 4.0,
+                        color: Colors.black26,
+                        offset: Offset(2, 2),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  '🔍 Decisiones:',
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    color: Color(0xFFD81B60),
+                    decoration: TextDecoration.underline,
+                    decorationStyle: TextDecorationStyle.dashed,
+                  ),
+                ),
+                Text(
+                  'Utiliza condiciones para elegir el camino correcto.',
+                  style: TextStyle(fontSize: 18.0),
+                ),
+                Text(
+                  'Ejemplo: Si tienes hambre, prepara un sándwich; si no, continúa con otra tarea.',
+                  style: TextStyle(
+                    fontSize: 17.0,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  '⭕ Bucles:',
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    color: Color(0xFF00838F),
+                    decoration: TextDecoration.underline,
+                    decorationStyle: TextDecorationStyle.dashed,
+                  ),
+                ),
+                Text(
+                  'Repite instrucciones hasta cumplir un objetivo.',
+                  style: TextStyle(fontSize: 18.0),
+                ),
+                Text(
+                  'Ejemplo: Repetir 5 veces: dar un paso y aplaudir.',
+                  style: TextStyle(
+                    fontSize: 17.0,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+                // Uncomment if you want to display the image:
+                // Image.asset('assets/images/flowchart_simple.png'),
+              ],
+            ),
             imageAssets: [],
           ),
+          // Concept 4: Diagramas de Flujo
           LearningConcept(
             id: 'flowcharts',
             title: 'Diagramas de Flujo',
             shortDescription: 'Representación gráfica de algoritmos',
-            content: """# <span style="font-size: 32px; color: #3F51B5; font-weight: 900">📊 Diagramas de Flujo 📈</span>
-
-<span style="font-size: 20px; font-style: italic">Utilizamos formas para representar las partes de un algoritmo:</span>
-
-- <span style="font-size: 22px; color: #2E7D32">🟢 <span style="font-weight: 800">Óvalo:</span></span> <span style="font-size: 19px; font-style: italic">Inicio y Fin.</span>
-- <span style="font-size: 22px; color: #1565C0">🟦 <span style="font-weight: 800">Rectángulo:</span></span> <span style="font-size: 19px; text-decoration: underline">Acción o proceso.</span>
-- <span style="font-size: 22px; color: #FF8F00">🔶 <span style="font-weight: 800">Rombo:</span></span> <span style="font-size: 19px; letter-spacing: 1px">Decisión o condición.</span>
-- <span style="font-size: 22px; color: #424242">➡️ <span style="font-weight: 800">Flechas:</span></span> <span style="font-size: 19px; font-weight: 600">Indican la dirección del flujo.</span>
-
-![Símbolos de Diagrama](assets/images/flowchart_symbols.png)
-            """,
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '📊 Diagramas de Flujo 📈',
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    color: Color(0xFF3F51B5),
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  'Utilizamos formas para representar las partes de un algoritmo:',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  '🟢 Óvalo: Inicio y Fin.',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    color: Color(0xFF2E7D32),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(
+                  '🟦 Rectángulo: Acción o proceso.',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    color: Color(0xFF1565C0),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(
+                  '🔶 Rombo: Decisión o condición.',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    color: Color(0xFFFF8F00),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(
+                  '➡️ Flechas: Indican la dirección del flujo.',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    color: Color(0xFF424242),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                // Uncomment if you want to display the image:
+                // Image.asset('assets/images/flowchart_symbols.png'),
+              ],
+            ),
             imageAssets: [],
           ),
+          // Concept 5: Análisis de un Número
           LearningConcept(
             id: 'number_analysis',
             title: 'Análisis de un Número',
             shortDescription: 'Algoritmo práctico paso a paso',
-            content: """# <span style="font-size: 30px; color: #E91E63; text-shadow: 1px 1px 3px rgba(0,0,0,0.1)">🎮 Ejemplo: Análisis de un Número 🎲</span>
-
-<span style="font-size: 22px; background: linear-gradient(90deg, #FF9800, #F44336); -webkit-background-clip: text; color: transparent; font-weight: bold; letter-spacing: 1.5px">Veamos cómo funciona este algoritmo:</span>
-
-1. <span style="font-size: 20px; color: #2E7D32; font-weight: 900">**🟢 Inicio**</span>
-2. <span style="font-size: 20px; color: #0D47A1; font-weight: 800">**📝 Leer número**</span>
-3. <span style="font-size: 20px; color: #FF8F00; font-weight: 800">**🔶 Decisión:**</span>
-   <span style="margin-left: 20px; font-size: 18px; font-style: italic">¿Es mayor que 10?</span>
-   - <span style="margin-left: 30px; font-weight: 700; color: #4CAF50">SÍ → Mostrar "Es grande"</span>
-   - <span style="margin-left: 30px; font-weight: 700; color: #F44336">NO → Mostrar "Es pequeño"</span>
-4. <span style="font-size: 20px; color: #2E7D32; font-weight: 900">**🟢 Fin**</span>
-
-![Diagrama de Flujo](assets/images/flowchart_example.png)
-            """,
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '🎮 Ejemplo: Análisis de un Número 🎲',
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    color: Color(0xFFE91E63),
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 3.0,
+                        color: Colors.black12,
+                        offset: Offset(1, 1),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  'Veamos cómo funciona este algoritmo:',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5,
+                    foreground: Paint()..shader = LinearGradient(
+                      colors: [Color(0xFFFF9800), Color(0xFFF44336)],
+                    ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  '🟢 Inicio',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Color(0xFF2E7D32),
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                Text(
+                  '📝 Leer número',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Color(0xFF0D47A1),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(
+                  '🔶 Decisión: ¿Es mayor que 10?',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Color(0xFFFF8F00),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'SÍ → Mostrar "Es grande"',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF4CAF50),
+                        ),
+                      ),
+                      Text(
+                        'NO → Mostrar "Es pequeño"',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFFF44336),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  '🟢 Fin',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Color(0xFF2E7D32),
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                // Uncomment if you want to display the image:
+                // Image.asset('assets/images/flowchart_example.png'),
+              ],
+            ),
             imageAssets: [],
           ),
+          // Concept 6: Secuencia
           LearningConcept(
             id: 'sequence',
             title: 'Secuencia',
             shortDescription: 'Pasos en orden específico',
-            content: """# <span style="font-size: 32px; background-color: #E1F5FE; color: #01579B; padding: 5px; border-radius: 10px">📋 Secuencia 🔢</span>
-
-<span style="font-size: 20px; font-weight: 700">La secuencia consiste en seguir pasos en un orden específico.</span>
-
-## <span style="font-size: 24px; color: #7B1FA2; text-decoration: underline">✨ **Ejemplo Visual:**</span>
-
-<div style="background-color: #F1F8E9; padding: 10px; border-radius: 8px; border-left: 5px solid #8BC34A">
-<span style="font-size: 22px; color: #33691E; font-weight: 800">1. 💧 <span style="font-weight: normal">Lavar manos</span></span>
-<span style="font-size: 22px; color: #FF6F00; font-weight: 800">2. 🥕 <span style="font-weight: normal">Preparar ingredientes</span></span>
-<span style="font-size: 22px; color: #D84315; font-weight: 800">3. 🍳 <span style="font-weight: normal">Cocinar</span></span>
-</div>
-
-![Pasos en Secuencia](assets/images/sequence.png)
-            """,
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '📋 Secuencia 🔢',
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    backgroundColor: Color(0xFFE1F5FE),
+                    color: Color(0xFF01579B),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  'La secuencia consiste en seguir pasos en un orden específico.',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  '✨ Ejemplo Visual:',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    color: Color(0xFF7B1FA2),
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  '1. 💧 Lavar manos',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    color: Color(0xFF33691E),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(
+                  '2. 🥕 Preparar ingredientes',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    color: Color(0xFFFF6F00),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(
+                  '3. 🍳 Cocinar',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    color: Color(0xFFD84315),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                // Uncomment if you want to display the image:
+                // Image.asset('assets/images/sequence.png'),
+              ],
+            ),
             imageAssets: [],
           ),
+          // Concept 7: Decisiones
           LearningConcept(
             id: 'decisions',
             title: 'Decisiones',
             shortDescription: 'Bifurcaciones en algoritmos',
-            content: """# <span style="font-size: 30px; color: #C2185B; font-family: cursive">🔀 Condicionales ❓</span>
-
-<span style="font-size: 20px; font-weight: 600; letter-spacing: 0.5px">Permiten ejecutar diferentes acciones según la situación.</span>
-
-## <span style="font-size: 25px; color: #6A1B9A; font-style: italic">🌈 *Ejemplo:*</span>
-
-<div style="background-color: #FFF3E0; padding: 15px; border-radius: 12px; margin: 10px 0">
-<span style="font-size: 22px; font-weight: 700; color: #E65100">☀️ Si está soleado:</span>
-<span style="font-size: 20px; margin-left: 25px; font-style: italic; color: #FF6F00">Salir a jugar</span>
-
-<span style="font-size: 22px; font-weight: 700; color: #1565C0">🌧️ Si llueve:</span>
-<span style="font-size: 20px; margin-left: 25px; font-style: italic; color: #0288D1">Leer un libro</span>
-</div>
-
-![Decisión Visual](assets/images/conditional.png)
-            """,
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '🔀 Condicionales ❓',
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    color: Color(0xFFC2185B),
+                    fontFamily: 'Cursive',
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  'Permiten ejecutar diferentes acciones según la situación.',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  '🌈 Ejemplo:',
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    color: Color(0xFF6A1B9A),
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Container(
+                  padding: EdgeInsets.all(15.0),
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFFFF3E0),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '☀️ Si está soleado:',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Color(0xFFE65100),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25.0),
+                        child: Text(
+                          'Salir a jugar',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontStyle: FontStyle.italic,
+                            color: Color(0xFFFF6F00),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        '🌧️ Si llueve:',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Color(0xFF1565C0),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25.0),
+                        child: Text(
+                          'Leer un libro',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontStyle: FontStyle.italic,
+                            color: Color(0xFF0288D1),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Uncomment if you want to display the image:
+                // Image.asset('assets/images/conditional.png'),
+              ],
+            ),
             imageAssets: [],
           ),
+          // Concept 8: Bucles
           LearningConcept(
             id: 'loops',
             title: 'Bucles',
             shortDescription: 'Repetición de instrucciones',
-            content: """# <span style="font-size: 32px; color: #00796B; text-shadow: 0 2px 4px rgba(0,0,0,0.2)">🔄 Bucles 🔁</span>
-
-<span style="font-size: 20px; color: #00695C; font-weight: 600; letter-spacing: 0.8px; line-height: 1.6">Ejecutan repetidamente instrucciones hasta cumplir una condición.</span>
-
-## <span style="font-size: 26px; color: #0277BD; text-decoration: underline wavy">🎯 **Tipos:**</span>
-
-<div style="background-color: #E8EAF6; padding: 10px; border-radius: 8px; margin-bottom: 15px">
-<span style="font-size: 22px; color: #303F9F; font-weight: 700">🔢 **For:**</span> <span style="font-size: 19px; font-style: italic">Repite un número específico de veces.</span>
-</div>
-
-<div style="background-color: #E0F2F1; padding: 10px; border-radius: 8px; margin-bottom: 15px">
-<span style="font-size: 22px; color: #00695C; font-weight: 700">⏳ **While:**</span> <span style="font-size: 19px; font-style: italic">Repite mientras se cumpla la condición.</span>
-</div>
-
-## <span style="font-size: 24px; color: #D81B60; font-style: italic">🧮 *Ejemplo:*</span>
-<span style="font-size: 20px; font-weight: 700; letter-spacing: 0.5px; color: #AD1457">Sumar números del 1 al 10.</span>
-
-![Bucle Visual](assets/images/loops.png)
-            """,
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '🔄 Bucles 🔁',
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    color: Color(0xFF00796B),
+                    shadows: [
+                      Shadow(
+                        blurRadius: 4.0,
+                        color: Colors.black26,
+                        offset: Offset(0, 2),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  'Ejecutan repetidamente instrucciones hasta cumplir una condición.',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.8,
+                    height: 1.6,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  '🎯 Tipos:',
+                  style: TextStyle(
+                    fontSize: 26.0,
+                    color: Color(0xFF0277BD),
+                    decoration: TextDecoration.underline,
+                    decorationStyle: TextDecorationStyle.wavy,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  margin: EdgeInsets.only(bottom: 15.0),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFE8EAF6),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        '🔢 For:',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Color(0xFF303F9F),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(width: 5.0),
+                      Flexible(
+                        child: Text(
+                          'Repite un número específico de veces.',
+                          style: TextStyle(
+                            fontSize: 19.0,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  margin: EdgeInsets.only(bottom: 15.0),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFE0F2F1),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        '⏳ While:',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Color(0xFF00695C),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(width: 5.0),
+                      Flexible(
+                        child: Text(
+                          'Repite mientras se cumpla la condición.',
+                          style: TextStyle(
+                            fontSize: 19.0,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  '🧮 Ejemplo: Sumar números del 1 al 10.',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                // Uncomment if you want to display the image:
+                // Image.asset('assets/images/loops.png'),
+              ],
+            ),
             imageAssets: ["assets/images/loops.png"],
           ),
         ],

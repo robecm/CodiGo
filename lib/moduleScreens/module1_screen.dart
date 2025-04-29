@@ -7,6 +7,8 @@ import '../animations/decorated_bubble.dart';
 import '../exerciseScreens/multiple_option_question_screen.dart';
 import '../learningScreens/learning_topics_screen.dart';
 import '../data/module1_learning_content.dart';
+import '../data/module1_questions.dart';
+import '../animations/static_bubble.dart';
 
 class Module1Screen extends StatefulWidget {
   const Module1Screen({super.key});
@@ -17,19 +19,28 @@ class Module1Screen extends StatefulWidget {
 
 class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderStateMixin {
   late ScrollController _scrollController;
+  // Add a ValueNotifier for the scroll offset
+  final ValueNotifier<double> _scrollOffsetNotifier = ValueNotifier<double>(0.0);
   final ValueNotifier<Color> _backgroundColorNotifier = ValueNotifier<Color>(Colors.blue);
   late AnimationController _animationController;
-  late int levelCount = 30;
+  late int levelCount = 8;
   List<BubbleData>? _backgroundBubbles;
   final Map<int, Widget> _cachedLevelButtons = {};
   final Map<int, Widget> _cachedBubblePaths = {};
   bool _learningCompleted = false;
+  Set<int> _answeredQuestions = {};
+  Offset _imagePosition = const Offset(20, 20);
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(_updateBackgroundColor);
+
+    // Add a listener that updates the scroll offset notifier immediately
+    _scrollController.addListener(() {
+      _scrollOffsetNotifier.value = _scrollController.offset;
+    });
 
     _animationController = AnimationController(
       vsync: this,
@@ -47,19 +58,18 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = 150.0 * levelCount;
 
-    // Generate fewer bubbles for better performance
     final Random random = Random();
-    final int bubbleCount = (levelCount * 2.5).round(); // Reduced bubble count
+    final int bubbleCount = (levelCount * 10).round();
 
     _backgroundBubbles = List.generate(
       bubbleCount,
-      (i) => BubbleData(
+          (i) => BubbleData(
         x: random.nextDouble() * screenWidth,
-        y: random.nextDouble() * screenHeight * 1.2,
-        size: random.nextDouble() * 25 + 10, // Slightly smaller size range
-        opacity: random.nextDouble() * 0.2 + 0.1, // Lower opacity
+        y: random.nextDouble() * screenHeight * 1.5,
+        size: random.nextDouble() * 25 + 10,
+        opacity: random.nextDouble() * 0.2 + 0.1,
         delay: random.nextDouble() * 5,
-        scrollFactor: 0.9 + random.nextDouble() * 0.2, // More consistent scroll factor
+        scrollFactor: 1.5 + random.nextDouble() * 0.3, // Lower value makes bubbles move faster
       ),
     );
 
@@ -72,6 +82,7 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
     _scrollController.dispose();
     _animationController.dispose();
     _backgroundColorNotifier.dispose();
+    _scrollOffsetNotifier.dispose(); // Clean up the scroll notifier
     super.dispose();
   }
 
@@ -101,22 +112,48 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
       return;
     }
 
+    // Check if this level is available: either it's the first level (1) or the previous level has been completed
+    bool isAvailable = buttonNumber == 1 || _answeredQuestions.contains(buttonNumber - 1);
+
+    // If level is not available, show message and return
+    if (!isAvailable) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Complete el nivel anterior para desbloquear este nivel.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    // Get question data in the format needed by MultipleOptionQuestionScreen
+    final questionData = Module1Questions.getQuestionData(buttonNumber);
+
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => MultipleOptionQuestionScreen(
           questionNumber: buttonNumber,
-          question: "Esta es la pregunta número $buttonNumber. Selecciona la alternativa correcta.",
-          options: [
-            "Opción A",
-            "Opción B",
-            "Opción C",
-            "Opción D",
-          ],
-          correctOptionIndex: 0,
+          question: questionData['question'],
+          options: questionData['options'],
+          correctOptionIndex: questionData['correctOptionIndex'],
         ),
       ),
-    );
+    ).then((result) {
+      // Check if the question was answered correctly
+      if (result is Map && result['correct'] == true) {
+        setState(() {
+          _answeredQuestions.add(buttonNumber);
+          // Clear the cached button to force rebuild with new color
+          _cachedLevelButtons.remove(buttonNumber);
+
+          // Also clear the next button to update its availability status
+          if (_cachedLevelButtons.containsKey(buttonNumber + 1)) {
+            _cachedLevelButtons.remove(buttonNumber + 1);
+          }
+        });
+      }
+    });
   }
 
   void _navigateToLearningSection({bool isReview = false}) {
@@ -141,9 +178,32 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
   }
 
   Widget _buildLevelButton(int index, double position) {
-    // Return cached button if available
-    if (_cachedLevelButtons.containsKey(index)) {
-      return _cachedLevelButtons[index]!;
+      // Return cached button if available
+      if (_cachedLevelButtons.containsKey(index)) {
+        return _cachedLevelButtons[index]!;
+      }
+
+      // Determine button color based on answer status
+      Color? buttonColor = _answeredQuestions.contains(index)
+          ? Colors.green // Green for correctly answered questions
+          : (index == 1 ? const Color(0xffd8e2ff) : null);
+
+      // Check if level is available (first level or previous level completed)
+      bool isAvailable = index == 1 || _answeredQuestions.contains(index - 1);
+
+      // Apply gray color for locked levels when learning is completed
+      if (!isAvailable && _learningCompleted) {
+        buttonColor = Colors.grey.shade400; // Gray for locked levels
+      }
+
+    // Convert numerical index to display label (A, B, C for first 3, then 1, 2, 3...)
+    String buttonLabel;
+    if (index <= 3) {
+      // First part - use letters A, B, C
+      buttonLabel = String.fromCharCode(64 + index); // ASCII: A=65, B=66, C=67
+    } else {
+      // Second part - use numbers starting from 1
+      buttonLabel = '${index - 3}';
     }
 
     // Create and cache the button
@@ -173,11 +233,11 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
                 onPressed: () => _navigateToQuestion(index),
                 heroTag: "btn$index",
                 shape: const CircleBorder(),
-                backgroundColor: index == 1 ? const Color(0xffd8e2ff) : null,
+                backgroundColor: buttonColor,
                 elevation: 0,
                 highlightElevation: 0,
                 child: Text(
-                  '$index',
+                  buttonLabel,
                   style: const TextStyle(
                     fontSize: 40,
                     fontFamily: 'GoodMatcha'
@@ -194,8 +254,7 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
     return button;
   }
 
-  Widget _buildDirectionalBubbles(
-      int currentButton, Color bubbleColor, double startPos, double endPos) {
+  Widget _buildDirectionalBubbles(int currentButton, Color bubbleColor, double startPos, double endPos) {
     final key = currentButton;
 
     // Return cached bubble path if available
@@ -231,7 +290,9 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
   @override
   Widget build(BuildContext context) {
     final bubbleColor = Theme.of(context).colorScheme.inversePrimary;
-    double progressValue = 0.9;
+    double progressValue = _learningCompleted
+        ? (_answeredQuestions.length / levelCount.toDouble())
+        : 0.0;
     final double screenWidth = MediaQuery.of(context).size.width;
 
     final leftPosition = screenWidth * 0.2;
@@ -296,16 +357,24 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
               // Background bubbles in a RepaintBoundary
               Positioned.fill(
                 child: RepaintBoundary(
-                  child: FloatingBubbleGroup(
-                    bubbles: _backgroundBubbles!,
-                    baseColor: Theme.of(context).colorScheme.primary,
-                    scrollOffset: _scrollController.hasClients ? _scrollController.offset : 0.0,
+                  child: ValueListenableBuilder<double>(
+                    valueListenable: _scrollOffsetNotifier,
+                    builder: (context, scrollOffset, _) {
+                      return StaticBubbleGroup(
+                        bubbles: _backgroundBubbles!,
+                        baseColor: Theme.of(context).colorScheme.primary,
+                        scrollOffset: scrollOffset,
+                      );
+                    },
                   ),
                 ),
               ),
 
               // Scrollable content in another layer
               _buildLevelContent(getPositionForIndex, bubbleColor),
+
+              // Step image - moved here to stay fixed during scrolling
+              _buildStepImage(),
 
               // Learning banner if not completed
               if (!_learningCompleted)
@@ -346,8 +415,6 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
                     ),
                   ),
                 ),
-
-
             ],
           ),
           bottomNavigationBar: BottomAppBar(
@@ -365,7 +432,6 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
                     iconSize: 24,
                     color: Colors.grey.shade600
                 ),
-                // Removed one of the duplicate book icons
                 IconButton(
                   icon: const Icon(Icons.book),
                   onPressed: () {
@@ -423,14 +489,10 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
         controller: _scrollController,
         child: Container(
           width: double.infinity,
-          padding: EdgeInsets.only(top: topPadding), // Dynamic padding when banner is showing
+          padding: EdgeInsets.only(top: topPadding),
           child: Stack(
             alignment: Alignment.topCenter,
             children: [
-              // Level buttons
-              for (int i = 1; i <= levelCount; i++)
-                _buildLevelButton(i, getPositionForIndex(i)),
-
               // Bubble paths between buttons
               for (int i = 1; i < levelCount; i++)
                 _buildDirectionalBubbles(
@@ -440,6 +502,12 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
                     getPositionForIndex(i + 1)
                 ),
 
+              // Level buttons
+              for (int i = 1; i <= levelCount; i++)
+                _buildLevelButton(i, getPositionForIndex(i)),
+
+              // Step image removed from here (moved to main Stack)
+
               // Add padding at the bottom
               SizedBox(height: 150.0 * levelCount),
             ],
@@ -448,4 +516,115 @@ class Module1ScreenState extends State<Module1Screen> with SingleTickerProviderS
       ),
     );
   }
+
+  Widget _buildStepImage() {
+    // Find the highest answered question from the step questions (4-8)
+    int latestAnsweredStep = 0;
+    for (int i = 8; i >= 4; i--) {
+      if (_answeredQuestions.contains(i)) {
+        latestAnsweredStep = i;
+        break;
+      }
+    }
+
+    // If no steps are answered yet, don't show any image
+    if (latestAnsweredStep == 0) {
+      return const SizedBox.shrink();
+    }
+
+    // Convert question index to step number (4->1, 5->2, etc.)
+    final int stepNumber = latestAnsweredStep - 3;
+
+    return Positioned(
+      left: _imagePosition.dx,
+      top: _imagePosition.dy,
+      child: GestureDetector(
+        onPanUpdate: (details) {
+          setState(() {
+            _imagePosition = Offset(
+              _imagePosition.dx + details.delta.dx,
+              _imagePosition.dy + details.delta.dy,
+            );
+          });
+        },
+        onPanEnd: (details) {
+          // Get screen dimensions
+          final screenWidth = MediaQuery.of(context).size.width;
+          final screenHeight = MediaQuery.of(context).size.height;
+
+          // Determine which corner to snap to
+          final bool isLeft = _imagePosition.dx < screenWidth / 2;
+          final bool isTop = _imagePosition.dy < screenHeight / 2;
+
+          // Calculate safe area for bottom (account for navigation bar and extra padding)
+          final bottomPadding = MediaQuery.of(context).padding.bottom + 80; // Increased padding
+
+          // Get image container total height (image + padding)
+          final double imageContainerHeight = 250 + 16; // max image height + container padding
+
+          setState(() {
+            // Snap to the appropriate corner
+            _imagePosition = Offset(
+              isLeft ? 20 : screenWidth - 170, // 150 (width) + 20 (padding)
+              isTop ? 20 : screenHeight - bottomPadding - imageContainerHeight, // Safer calculation
+            );
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                spreadRadius: 1,
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxHeight: 250, // Only cap at 250 if image exceeds this height
+                  ),
+                  child: Image.asset(
+                    'lib/assets/step$stepNumber.png',
+                    fit: BoxFit.contain,
+                    width: 150,
+                    errorBuilder: (context, error, stackTrace) {
+                      print('Error loading image: lib/assets/step$stepNumber.png');
+                      return Container(
+                        height: 150,
+                        width: 150,
+                        color: Colors.grey.shade200,
+                        child: const Center(
+                          child: Icon(Icons.image_not_supported, color: Colors.grey),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              // Add a drag handle indicator in the corner
+              Positioned(
+                right: 4,
+                bottom: 4,
+                child: Icon(
+                  Icons.drag_indicator,
+                  color: Colors.grey.withOpacity(0),
+                  size: 20,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
+

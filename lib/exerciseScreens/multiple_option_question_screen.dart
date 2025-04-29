@@ -196,7 +196,10 @@ class _MultipleOptionQuestionScreenState extends State<MultipleOptionQuestionScr
                         alignment: Alignment.centerRight,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            // Return whether the answer was correct
+                            Navigator.pop(context, {
+                              'correct': _selectedOptionIndex == _randomizedCorrectIndex
+                            });
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff19253b),
